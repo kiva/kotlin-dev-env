@@ -23,7 +23,19 @@ services:
       dockerfile: Dev.Dockerfile
     volumes:
       - ../nuxt-sandbox/:/app
+    environment:
+      - GQL_URL=http://localhost:3000/graphql
     ports:
     - "8989:8989"
+    depends_on:
+      - "graphql"
+  graphql:
+    build:
+      context: ../schema-stitching-demo/
+    environment:
+      - RUN_DELAY=15000
+      - KIOSA_URL=http://api:8080/graphql
+    ports:
+    - "3000:3000"
     depends_on:
       - "api"
