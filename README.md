@@ -32,3 +32,10 @@ docker-compose build
 
 docker-compose up
 ```
+
+## Data Persistence
+
+Currently the database's lifetime is tied to the DB container. The source repo for the image (https://github.com/sameersbn/docker-mysql)
+has some notes on how to mount a permanent database as a volume. This is not currently a priority due to the obvious ephemeral
+demo nature of the whole stack, but it wouldn't be too difficult to add. (In fact, the 0-version of the docker compose setup did
+exactly that.)
