@@ -1,12 +1,12 @@
 version: '3'
 services:
-  api:
+  blog:
     build:
       context: ../kotlin-demo/
       args:
         - usedb=mysql
-    ports:
-    - "8080:8080"
+    expose:
+    - "8080"
     depends_on:
     - "db"
   db:
@@ -28,14 +28,14 @@ services:
     ports:
     - "8989:8989"
     depends_on:
-      - "graphql"
-  graphql:
+      - "api"
+  api:
     build:
       context: ../schema-stitching-demo/
     environment:
-      - RUN_DELAY=15000
-      - KIOSA_URL=http://api:8080/graphql
+      - RUN_DELAY=20000
+      - KIOSA_URL=http://blog:8080/graphql
     ports:
     - "3000:3000"
     depends_on:
-      - "api"
+      - "blog"

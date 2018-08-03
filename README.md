@@ -33,6 +33,21 @@ docker-compose build
 docker-compose up
 ```
 
+## Notes on Container Boot Timing and Runtime Exceptions
+
+Docker Compose doesn't directly allow you to coordinate container startup -- and that's a good thing. Our real services
+will need to be robust enough to start up even if their dependencies are unavailable.
+
+However, the current state of our apps means that there can be failures if some containers don't boot fast enough.
+
+In particular, the Kotlin demo will fail to boot if it cannot connect to the DB, and the Apollo graphQL server will fail
+to boot if the Kotlin demo app is not available.
+
+In most cases, just stopping all containers and trying again works. If you're having particular problems with coordinating
+the timing of the Kotlin app boot vs the Apollo graphQL server boot, you can try tweaking the DELAY_TIME environment variable
+defined in the graphql service in docker-compose.yml.
+
+
 ## Data Persistence
 
 Currently the database's lifetime is tied to the DB container. The source repo for the image (https://github.com/sameersbn/docker-mysql)
