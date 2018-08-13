@@ -23,7 +23,9 @@ cd kotlin-dev-env/
 
 Dependency: You'll want to have Docker and Docker Compose installed locally. ([Docker for Mac](https://www.docker.com/docker-mac) includes Docker Compose.)
 
-Finally, test your environment via Docker Compose:
+Finally, build and run your environment via Docker Compose. Note that many apps boot in development mode, meaning they
+will compile and reflect the local state of your individual repositories. Thus if you haven't pulled in updates to those
+repos lately, you might run into some issues.
 
 ```
 # From the kotlin-dev-env directory
@@ -32,6 +34,16 @@ docker-compose build
 
 docker-compose up
 ```
+
+You'll see console output relative to each service. Because the Kotlin app can be slow to boot in development  mode,
+and the Apollo GraphQL server has exponential backoff, it can take a while before the `api` service finally reports that
+it has started.
+
+To test everything out, try the following in your browser:
+
+- UI server: `http://localhost:8989/`
+- Apollo GraphQL server: `http://localhost:3000/graphiql`
+- Kotlin app: `http://localhost:8080/graphiql?query=%7B%0A%20%20version%0A%7D`
 
 ## Notes on Container Boot Timing and Runtime Exceptions
 
@@ -44,7 +56,7 @@ In particular, the Kotlin demo will fail to boot if it cannot connect to the DB,
 to boot if the Kotlin demo app is not available.
 
 In most cases, just stopping all containers and trying again works. If you're having particular problems with coordinating
-the timing of the Kotlin app boot vs the Apollo graphQL server boot, you can try tweaking the DELAY_TIME environment variable
+the timing of the Kotlin app boot vs the Apollo graphQL server boot, you can try tweaking the NUM_RETRIES environment variable
 defined in the graphql service in docker-compose.yml.
 
 
