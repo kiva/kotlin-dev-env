@@ -1,12 +1,17 @@
 version: '3'
 services:
   blog:
-    build:
-      context: ../kotlin-demo/
-      args:
-        - usedb=mysql
-    expose:
-    - "8080"
+    build: ../kotlin-demo/
+    environment:
+      - SPRING_PROFILES_ACTIVE=mysql
+      - DB_CONNECTION_STRING=mysql://db:3306/dbname
+      - DB_USER=dbuser
+      - DB_PASS=dbpass
+    volumes:
+      - $HOME/.gradle:/root/.gradle
+      - ../kotlin-demo:/app
+    ports:
+    - "8080:8080"
     depends_on:
     - "db"
   db:
