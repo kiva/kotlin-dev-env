@@ -4,7 +4,7 @@ services:
     build: ../kotlin-demo/
     environment:
       - SPRING_PROFILES_ACTIVE=mysql
-      - DB_CONNECTION_STRING=mysql://db:3306/dbname
+      - DB_CONNECTION_STRING=mysql://db:3306/dbname?autoReconnect=true&useSSL=false
       - DB_USER=dbuser
       - DB_PASS=dbpass
     volumes:
@@ -26,8 +26,6 @@ services:
     build:
       context: ../nuxt-sandbox/
       dockerfile: Dev.Dockerfile
-    volumes:
-      - ../nuxt-sandbox/:/app
     environment:
       - GQL_URL=http://localhost:3000/graphql
     ports:
