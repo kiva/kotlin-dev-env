@@ -2,6 +2,14 @@
 
 Demo Docker Compose setup for local development using demo apps.
 
+If you haven't yet, follow our [guide on Confluence](https://confluence.kiva.org/display/BRAIN/Kotlin+Developer+Setup) to set up 
+your local development environment and install dependencies.
+
+The individual repos may be found at:
+* https://github.com/kiva/nuxt-sandbox
+* https://github.com/kiva/schema-stitching-demo
+* https://github.com/kiva/kotlin-demo
+
 Note: This is a clunky setup process for demo purposes. If you'd like to improve the process, please do so!
 
 # Install Demo Apps
@@ -21,9 +29,7 @@ cd kotlin-dev-env/
 
 # Docker Compose
 
-Dependency: You'll want to have Docker and Docker Compose installed locally. ([Docker for Mac](https://www.docker.com/docker-mac) includes Docker Compose.)
-
-Finally, build and run your environment via Docker Compose. Note that many apps boot in development mode, meaning they
+Use Docker Compose to build and run your environment. Note that many apps boot in development mode, meaning they
 will compile and reflect the local state of your individual repositories. Thus if you haven't pulled in updates to those
 repos lately, you might run into some issues.
 
@@ -59,10 +65,26 @@ In most cases, just stopping all containers and trying again works. If you're ha
 the timing of the Kotlin app boot vs the Apollo graphQL server boot, you can try tweaking the NUM_RETRIES environment variable
 defined in the graphql service in docker-compose.yml.
 
-
 ## Data Persistence
 
 Currently the database's lifetime is tied to the DB container. The source repo for the image (https://github.com/sameersbn/docker-mysql)
 has some notes on how to mount a permanent database as a volume. This is not currently a priority due to the obvious ephemeral
 demo nature of the whole stack, but it wouldn't be too difficult to add. (In fact, the 0-version of the docker compose setup did
 exactly that.)
+
+# Local Code Updates and Hot Restarts
+
+The Docker Compose configuration boots the UI server, the Apollo GraphQL server, and the Kotlin service in development
+modes that support hot restarts.
+
+However, the UI server and Apollo GraphQL servers require npm installed locally to properly support hot restarts. Rather
+than require npm installation, we have opted to simply avoid fully supporting hot restarts via the current
+configuration. If you have npm installed locally, it's not too difficult to alter the configuration to mount
+your source repositories in the respective services, and follow the READMEs to compile locally.
+
+The Kotlin service will trigger auto restarts upon compilation updates, which can be triggered by local Gradle builds.
+Alternatively, if a source file has changed, re-running `docker-compose up` will cold restart the service, triggering
+compilation.
+
+Finally, you can always just re-run `docker-compose build` to push local updates to the images powering the services, and
+follow up with `docker-compose up`.
