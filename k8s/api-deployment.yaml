@@ -1,0 +1,28 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  selector:
+    matchLabels:
+      app: api
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - env:
+        - name: KIOSA_URL
+          value: "http://$(BLOG_SERVICE_HOST):$(BLOG_SERVICE_PORT)/graphql"
+        - name: NUM_RETRIES
+          value: "20"
+        image: apollo:v0.1
+        name: api
+        ports:
+        - containerPort: 3000
+        resources: {}
+      restartPolicy: Always
+status: {}

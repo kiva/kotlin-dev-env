@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: blog-deployment
+spec:
+  selector:
+    matchLabels:
+      app: blog
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: blog
+    spec:
+      containers:
+      - env:
+        - name: DB_CONNECTION_STRING
+          value: mysql://$(DB_SERVICE_HOST):$(DB_SERVICE_PORT)/dbname?autoReconnect=true&useSSL=false
+        - name: DB_PASS
+          value: dbpass
+        - name: DB_USER
+          value: dbuser
+        - name: SPRING_PROFILES_ACTIVE
+          value: mysql
+        image: blog:v0.1
+        name: blog
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+status: {}

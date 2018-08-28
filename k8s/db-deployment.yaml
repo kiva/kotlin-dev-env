@@ -1,0 +1,28 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: db-deployment
+spec:
+  selector:
+    matchLabels:
+      app: db
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - env:
+        - name: DB_NAME
+          value: dbname
+        - name: DB_PASS
+          value: dbpass
+        - name: DB_USER
+          value: dbuser
+        image: sameersbn/mysql
+        name: db
+        resources: {}
+      restartPolicy: Always
+status: {}
