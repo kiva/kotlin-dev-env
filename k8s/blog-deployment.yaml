@@ -28,5 +28,17 @@ spec:
         ports:
         - containerPort: 8080
         resources: {}
+        readinessProbe:
+          httpGet:
+            path: "/graphql?query=%7B__schema%7BqueryType%7Bname%7D%7D%7D"
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: "/graphql?query=%7B__schema%7BqueryType%7Bname%7D%7D%7D"
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
       restartPolicy: Always
 status: {}

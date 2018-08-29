@@ -18,11 +18,23 @@ spec:
         - name: KIOSA_URL
           value: "http://$(BLOG_SERVICE_HOST):$(BLOG_SERVICE_PORT)/graphql"
         - name: NUM_RETRIES
-          value: "20"
+          value: "7"
         image: apollo:v0.1
         name: api
         ports:
         - containerPort: 3000
         resources: {}
+        readinessProbe:
+          httpGet:
+            path: "/graphql?query=%7B__schema%7BqueryType%7Bname%7D%7D%7D"
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: "/graphql?query=%7B__schema%7BqueryType%7Bname%7D%7D%7D"
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 30
       restartPolicy: Always
 status: {}
