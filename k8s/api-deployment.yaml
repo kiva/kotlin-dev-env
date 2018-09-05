@@ -16,7 +16,7 @@ spec:
       containers:
       - env:
         - name: KIOSA_URL
-          value: "http://$(BLOG_SERVICE_HOST):$(BLOG_SERVICE_PORT)/graphql"
+          value: "http://blog.default:$(BLOG_SERVICE_PORT)/graphql"
         - name: NUM_RETRIES
           value: "7"
         image: apollo:v0.1
