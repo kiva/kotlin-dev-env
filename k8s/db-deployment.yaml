@@ -16,12 +16,12 @@ spec:
       containers:
       - env:
         - name: DB_NAME
-          value: dbname
+          value: dbname # These are bad credentials we'll eventually want to migrate to using secrets
         - name: DB_PASS
           value: dbpass
         - name: DB_USER
           value: dbuser
-        image: sameersbn/mysql
+        image: sameersbn/mysql # If we firm up on MySQL, we'll probably want to adapt to the actual MySQL image. I used this one for the convenient remote user + db setup via environment variables.
         name: db
         resources: {}
       restartPolicy: Always

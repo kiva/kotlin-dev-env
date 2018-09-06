@@ -16,7 +16,7 @@ spec:
       containers:
       - env:
         - name: GQL_URL
-          value: "http://localhost:31978/graphql"
+          value: "http://localhost:31978/graphql" # This maps back to the (a) local setup and (b) nodePort definition on the API service. What this really needs to be is the public address of the API server.
         image: nuxt:v0.1
         name: ui
         ports:

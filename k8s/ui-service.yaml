@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: ui
-  type: NodePort
+  type: NodePort # Again, NodePort running 1 replica for local convenience
   ports:
   - name: http
     port: 8989
