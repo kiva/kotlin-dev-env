@@ -15,16 +15,19 @@ spec:
     spec:
       containers:
       - env:
+        - name: SPRING_CONFIG_ADDITIONAL-LOCATION
+          value: "file:./secrets/"
         - name: DB_CONNECTION_STRING
           value: mysql://db.default:$(DB_SERVICE_PORT)/dbname?autoReconnect=true&useSSL=false
-        - name: DB_PASS
-          value: dbpass # These are bad credentials we'll eventually want to migrate to using secrets (also avoid needing to keep this in sync with the DB deployment spec)
-        - name: DB_USER
-          value: dbuser
-        - name: SPRING_PROFILES_ACTIVE
-          value: mysql
         image: kiva/kiosa-dev:latest #We'll eventually want to be smarter with our tagging and not rely on latest
         name: blog
+        volumeMounts:
+        - name: blog-config
+          mountPath: "/root/config" # needs to be under /root, this automatically searched by spring boot
+          readOnly: true
+        - name: blog-secrets
+          mountPath: "/root/secrets" # this is configured via env variable above
+          readOnly: true
         ports:
         - containerPort: 8080
         resources: {}
@@ -43,4 +46,17 @@ spec:
       imagePullSecrets:
         - name: regcred # This will only work if you have set up a regcred secret containing Docker Hub credentials
       restartPolicy: Always
+      volumes:
+      - name: blog-config
+        configMap:
+          name: blog-config # kubectl create configmap blog-config --from-file=configs/blog.properties
+          items:
+          - key: blog.properties
+            path: application.properties # filename spring boot will look for
+      - name: blog-secrets
+        secret:
+          secretName: blog-secrets # kubectl create secret generic blog-secrets --from-file=secrets/blog.secrets.properties
+          items:
+          - key: blog.secrets.properties
+            path: application.properties # filename spring boot will look for
 status: {}
