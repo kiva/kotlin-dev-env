@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: api
-  replicas: 1
+  replicas: 1 # 1 replica because no load balancing happening. I generally did this with all deployments
   strategy: {}
   template:
     metadata:
@@ -19,7 +19,7 @@ spec:
           value: "http://blog.default:$(BLOG_SERVICE_PORT)/graphql"
         - name: NUM_RETRIES
           value: "7"
-        image: apollo:v0.1
+        image: kiva/kiosa-api:latest
         name: api
         ports:
         - containerPort: 3000

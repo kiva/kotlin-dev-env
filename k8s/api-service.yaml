@@ -5,11 +5,11 @@ metadata:
 spec:
   selector:
     app: api
-  type: NodePort
+  type: NodePort # In general I made the frontend services NodePorts because the load balanced types are more difficult to work with in the local environment. I don't think it's insurmountable, but you have to do some digging to figure out how the service is being exposed.
   ports:
   - name: http
     port: 3000
     targetPort: 3000
-    nodePort: 31978
+    nodePort: 31978 # This can probably go away in the production setting. I did this because I needed to have a predictable port number to point to in the UI, but if we have real DNS records and use standard ports this is probably unnecessary
 status:
   loadBalancer: {}

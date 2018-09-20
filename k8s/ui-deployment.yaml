@@ -16,8 +16,8 @@ spec:
       containers:
       - env:
         - name: GQL_URL
-          value: "http://localhost:31978/graphql"
-        image: nuxt:v0.1
+          value: "http://localhost:31978/graphql" # This maps back to the (a) local setup and (b) nodePort definition on the API service. What this really needs to be is the public address of the API server.
+        image: kiva/kiosa-ui:latest
         name: ui
         ports:
         - containerPort: 8989
