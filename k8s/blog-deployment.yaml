@@ -17,8 +17,6 @@ spec:
       - env:
         - name: SPRING_CONFIG_ADDITIONAL-LOCATION
           value: "file:./secrets/"
-        - name: DB_CONNECTION_STRING
-          value: mysql://db.default:$(DB_SERVICE_PORT)/dbname?autoReconnect=true&useSSL=false
         image: kiva/kiosa-dev:latest #We'll eventually want to be smarter with our tagging and not rely on latest
         name: blog
         volumeMounts:
