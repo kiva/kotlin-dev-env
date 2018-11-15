@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recon-deployment
+spec:
+  selector:
+    matchLabels:
+      app: recon
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: recon
+    spec:
+      containers:
+      - name: recon
+        image: kiva/recon:master-2
+        env:
+        - name: SPRING_RABBITMQ_HOST
+          value: rabbitmq.default
+        - name: SPRING_RABBITMQ_PORT
+          value: $(RABBITMQ_SERVICE_PORT)
+        resources: {}
+      imagePullSecrets:
+      - name: regcred
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recon
+spec:
+  selector:
+    app: recon
+  type: ClusterIP
+  ports:
+  - name: recon
+    port: 8080
+    targetPort: 8080
+status:
+  loadBalancer: {}
