@@ -1,43 +1,21 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: recon-deployment
-spec:
-  selector:
-    matchLabels:
-      app: recon
-  replicas: 1
-  strategy: {}
-  template:
-    metadata:
-      labels:
-        app: recon
-    spec:
-      containers:
-      - name: recon
-        image: kiva/recon:master-2
-        env:
-        - name: SPRING_RABBITMQ_HOST
-          value: rabbitmq.default
-        - name: SPRING_RABBITMQ_PORT
-          value: $(RABBITMQ_SERVICE_PORT)
-        resources: {}
-      imagePullSecrets:
-      - name: regcred
-      restartPolicy: Always
-status: {}
----
-apiVersion: v1
-kind: Service
+apiVersion: batch/v1beta1
+kind: CronJob
 metadata:
   name: recon
 spec:
-  selector:
-    app: recon
-  type: ClusterIP
-  ports:
-  - name: recon
-    port: 8080
-    targetPort: 8080
-status:
-  loadBalancer: {}
+  schedule: "*/1 * * * *" # Every minute for local dev convenience, in actual dev this can be far, far less frequent
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: recon
+            image: kiva/recon:master-3
+            env:
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq.default # Specific to spec in rabbitmq-single-node.yaml. Host and port should be adapted to actual Dev specs for RabbitMQ.
+            - name: SPRING_RABBITMQ_PORT
+              value: $(RABBITMQ_SERVICE_PORT)
+          imagePullSecrets:
+          - name: regcred # Very specific to local Docker credentials setup
+          restartPolicy: OnFailure
